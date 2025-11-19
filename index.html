@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>67</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    
+    * { margin:0; padding:0; image-rendering: pixelated; }
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: 'VT323', monospace;
+      font-size: 32px;
+      overflow: hidden;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect width="16" height="16" fill="%23f0f"/></svg>'), auto;
+    }
+    canvas { position: fixed; top:0; left:0; z-index: -1; }
+    
+    .container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+    
+    .giant67 {
+      font-size: 420px;
+      line-height: 0.8;
+      color: #f0f;
+      text-shadow: 
+        8px 8px 0px #0ff,
+        -8px -8px 0px #ff0,
+        16px 16px 0px #f00;
+      animation: pulse 2s infinite, hue 8s infinite;
+      user-select: none;
+    }
+    
+    .subtitle {
+      font-size: 60px;
+      color: #0ff;
+      margin: 20px;
+      animation: glitch 3s infinite;
+    }
+    
+    .quiz {
+      margin-top: 40px;
+      background: rgba(0,255,0,0.1);
+      padding: 30px;
+      border: 4px solid #0f0;
+      border-radius: 0;
+      max-width: 900px;
+    }
+    
+    button {
+      background: #f0f;
+      color: #000;
+      border: none;
+      padding: 20px 40px;
+      font-family: 'VT323', monospace;
+      font-size: 40px;
+      margin: 10px;
+      cursor: pointer;
+      image-rendering: pixelated;
+      animation: flash 1.5s infinite;
+    }
+    
+    button:hover { background: #ff0; }
+    
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes hue { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+    @keyframes glitch {
+      0%,100% { text-shadow: 4px 4px #f0f, -4px -4px #0ff; }
+      50% { text-shadow: -4px -4px #f0f, 4px 4px #0ff; }
+    }
+    @keyframes flash { 0%,100% { opacity: 1; } 50% { opacity: 0.7; } }
+  </style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="container">
+  <div class="giant67">67</div>
+  <div class="subtitle">THE QUIZ OF ASCENSION</div>
+  <div class="quiz">
+    <h2 id="question">Loading brainrot...</h2>
+    <div id="options"></div>
+    <p id="score">Score: 0</p>
+  </div>
+</div>
+
+<script>
+  // Pixel rain background
+  const canvas = document.getElementById('bg');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  const pixels = [];
+  for(let i = 0; i < 100; i++) {
+    pixels.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      speed: 1 + Math.random() * 3,
+      size: 4 + Math.random() * 8,
+      color: ['#0f0','#0ff','#f0f','#ff0'][Math.floor(Math.random()*4)]
+    });
+  }
+  
+  function draw() {
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    pixels.forEach(p => {
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+      p.y += p.speed;
+      if (p.y > canvas.height) p.y = -10;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // 67 QUIZ OF DOOM
+  const questions = [
+    { q: "What is 67?", a: "the meaning of life", options: ["a number","the meaning of life","skibidi toilet","ohio"] },
+    { q: "Who made this site?", a: "Sebastian", options: ["Elon","Sebastian","a 12 year old","your mom"] },
+    { q: "What happens when you reach 67?", a: "ascension", options: ["nothing","you die","ascension","you become goated"] },
+    { q: "Is 67 based?", a: "yes", options: ["no","yes","mid","cringe"] },
+    { q: "Final question: are you 67?", a: "yes", options: ["no","yes","maybe","ratio"] }
+  ];
+
+  let current = 0;
+  let score = 0;
+
+  const qEl = document.getElementById('question');
+  const opts = document.getElementById('options');
+  const scoreEl = document.getElementById('score');
+
+  function loadQuestion() {
+    if (current >= questions.length) {
+      qEl.textContent = `YOU ARE NOW 67.`;
+      opts.innerHTML = `<button onclick="location.reload()">RESTART BRAINROT</button>`;
+      return;
+    }
+
+    const qq = questions[current];
+    qEl.textContent = qq.q;
+    opts.innerHTML = '';
+    
+    qq.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt;
+      btn.onclick = () => {
+        if (opt === qq.a) {
+          score++;
+          btn.style.background = '#0f0';
+        } else {
+          btn.style.background = '#f00';
+        }
+        scoreEl.textContent = `Score: ${score}/${questions.length}`;
+        setTimeout(() => {
+          current++;
+          loadQuestion();
+        }, 1500);
+      };
+      opts.appendChild(btn);
+    });
+  }
+
+  loadQuestion();
+</script>
+</body>
+</html>
